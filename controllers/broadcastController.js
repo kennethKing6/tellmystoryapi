@@ -71,7 +71,7 @@ exports.listBroadcastsByViews = (req,res)=>{
 }
 
 exports.startStreaming = (req,res)=>{
-    const {username,streamingID} = req.body;
+    const {username,streamingID} = req.headers;
 
     if( username !== undefined && streamingID !== undefined && username.length > 0 && validate(streamingID)){
         if(Broadcasters[username.toLowerCase()] !== undefined ){
