@@ -75,16 +75,14 @@ exports.startStreaming = (req,res)=>{
 
     if( username !== undefined && streamingID !== undefined && username.length > 0 && validate(streamingID)){
         if(Broadcasters[username.toLowerCase()] !== undefined ){
-            if( Broadcasters[username.toLowerCase()].getUserBroadcasterID() === streamingID){
-                req.socket.on("connection",(socket)=>{
-                    console.log(`${username} has just been connected!`)
-                    socket.on("disconnect",()=>{
-    
-                    })
-    
-                    socket.on("broadcastVideo",(data)=>{
-                        saveVideoChunck(username,data)
-                    })
+            if( Broadcasters[username.toLowerCase()].getBroadcastID() === streamingID){
+                var io = req.app.get("socketio");
+                io.on("connection",(socket)=>{
+                    console.log(`${username} has just been connected! socketID: ${socket.id}`)
+                        socket.on(streamingID,(data)=>{
+                            console.log("Data",data)
+                            saveVideoChunck(username,data);
+                        })
                    
                 })
     
