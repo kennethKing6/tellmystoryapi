@@ -77,7 +77,7 @@ exports.startStreaming = (req,res)=>{
         if(Broadcasters[username.toLowerCase()] !== undefined ){
             if( Broadcasters[username.toLowerCase()].getUserBroadcasterID() === streamingID){
                 req.socket.on("connection",(socket)=>{
-
+                    console.log(`${username} has just been connected!`)
                     socket.on("disconnect",()=>{
     
                     })
