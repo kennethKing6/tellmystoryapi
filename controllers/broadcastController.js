@@ -72,35 +72,43 @@ exports.listBroadcastsByViews = (req,res)=>{
 
 exports.startStreaming = (req,res)=>{
     var io = req.app.get("socketio");
+    io.of("/stream")
     io.on("connection",(socket)=>{
-        const {username,streamingID} = socket.handshake.query;
-
-        if( username !== undefined && streamingID !== undefined && username.length > 0 && validate(streamingID)){
-            if(Broadcasters[username.toLowerCase()] !== undefined ){
-                if( Broadcasters[username.toLowerCase()].getBroadcastID() === streamingID){
-                    console.log(`${username} has just been connected! socketID: ${socket.id}`)
-                socket.on(streamingID,(data)=>{
-                    console.log("Data",data)
-                    saveVideoChunck(username,data);
-                })
-        
-                    res.status(200)
-                    res.send("success: we are ready to stream, socketID");
-                }else{
-                    res.status(402)
-                    res.send("error: incorrect streaming ID for user");
-                }
-               
-            }else{
-                res.status(405)
-                res.send(`error: ${username} is an unknown user`)
-            }
-        }else{
-            res.status(400)
-            res.send("Bad request")
-        }
-       
+        console.log("socket",socket.id)
+        res.send("Socket ID" + socket.id)
     })
+    res.status(200);
+    res.send("again send ")
+
+    // io.on("connection",(socket)=>{
+    //     const {username,streamingID} = socket.handshake.query;
+
+    //     if( username !== undefined && streamingID !== undefined && username.length > 0 && validate(streamingID)){
+    //         if(Broadcasters[username.toLowerCase()] !== undefined ){
+    //             if( Broadcasters[username.toLowerCase()].getBroadcastID() === streamingID){
+    //                 console.log(`${username} has just been connected! socketID: ${socket.id}`)
+    //             socket.on(streamingID,(data)=>{
+    //                 console.log("Data",data)
+    //                 saveVideoChunck(username,data);
+    //             })
+        
+    //                 res.status(200)
+    //                 res.send("success: we are ready to stream, socketID");
+    //             }else{
+    //                 res.status(402)
+    //                 res.send("error: incorrect streaming ID for user");
+    //             }
+               
+    //         }else{
+    //             res.status(405)
+    //             res.send(`error: ${username} is an unknown user`)
+    //         }
+    //     }else{
+    //         res.status(400)
+    //         res.send("Bad request")
+    //     }
+       
+    // })
 
    
     
