@@ -1,6 +1,7 @@
 var express = require('express');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+require("./socket")
 
 var app = express();
 
