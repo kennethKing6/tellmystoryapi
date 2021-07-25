@@ -71,35 +71,37 @@ exports.listBroadcastsByViews = (req,res)=>{
 }
 
 exports.startStreaming = (req,res)=>{
-    const {username,streamingID} = req.headers;
+    var io = req.app.get("socketio");
+    io.on("connection",(socket)=>{
+        const {username,streamingID} = socket.handshake.query;
 
-    if( username !== undefined && streamingID !== undefined && username.length > 0 && validate(streamingID)){
-        if(Broadcasters[username.toLowerCase()] !== undefined ){
-            if( Broadcasters[username.toLowerCase()].getBroadcastID() === streamingID){
-                var io = req.app.get("socketio");
-                io.on("connection",(socket)=>{
+        if( username !== undefined && streamingID !== undefined && username.length > 0 && validate(streamingID)){
+            if(Broadcasters[username.toLowerCase()] !== undefined ){
+                if( Broadcasters[username.toLowerCase()].getBroadcastID() === streamingID){
                     console.log(`${username} has just been connected! socketID: ${socket.id}`)
-                        socket.on(streamingID,(data)=>{
-                            console.log("Data",data)
-                            saveVideoChunck(username,data);
-                        })
-                   
+                socket.on(streamingID,(data)=>{
+                    console.log("Data",data)
+                    saveVideoChunck(username,data);
                 })
-    
-                res.status(200)
-                res.send("success: we are ready to stream, socketID");
+        
+                    res.status(200)
+                    res.send("success: we are ready to stream, socketID");
+                }else{
+                    res.status(402)
+                    res.send("error: incorrect streaming ID for user");
+                }
+               
             }else{
-                res.status(402)
-                res.send("error: incorrect streaming ID for user");
+                res.status(405)
+                res.send(`error: ${username} is an unknown user`)
             }
-           
         }else{
-            res.status(405)
-            res.send(`error: ${username} is an unknown user`)
+            res.status(400)
+            res.send("Bad request")
         }
-    }else{
-        res.status(400)
-        res.send("Bad request")
-    }
+       
+    })
+
+   
     
 }
