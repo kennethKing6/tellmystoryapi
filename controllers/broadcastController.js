@@ -73,10 +73,11 @@ exports.listBroadcastsByViews = (req,res)=>{
 exports.startStreaming = (req,res)=>{
     var io = req.app.get("socketio");
     io.of("/stream")
-    io.on("connect",(socket)=>{
+    io.on("connection",(socket)=>{
         const {username,streamingID} = socket.handshake.query;
         console.log("streamingID",streamingID)
         console.log("Socket ID" + socket.id)
+        socket.emit('connect_error',streamingID)
     })
  
 
