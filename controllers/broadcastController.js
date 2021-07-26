@@ -73,12 +73,12 @@ exports.listBroadcastsByViews = (req,res)=>{
 exports.startStreaming = (req,res)=>{
     var io = req.app.get("socketio");
     io.of("/stream")
-    io.on("connection",(socket)=>{
-        console.log("socket",socket.id)
-        res.send("Socket ID" + socket.id)
+    io.on("connect",(socket)=>{
+        const {username,streamingID} = socket.handshake.query;
+        console.log("streamingID",streamingID)
+        console.log("Socket ID" + socket.id)
     })
-    res.status(200);
-    res.send("again send ")
+ 
 
     // io.on("connection",(socket)=>{
     //     const {username,streamingID} = socket.handshake.query;
@@ -110,6 +110,7 @@ exports.startStreaming = (req,res)=>{
        
     // })
 
-   
+    // res.staxtus(200);
+    res.send("<h1>Succeeded</h1>")
     
 }
