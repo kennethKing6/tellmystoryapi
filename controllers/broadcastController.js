@@ -1,7 +1,7 @@
 
 const uuid = require("../utils/uuid");
 const {v4, validate} = require("uuid");
-const { addNewBroadcast, searchBroadcastByViews, saveVideoChunck } = require("../utils/broadcastUtils");
+const { addNewBroadcast, searchBroadcastByViews } = require("../utils/broadcastUtils");
 const Broadcasters = require("../broadcasters.json");
 
 exports.addBroadcast = (req,res,next)=>{
@@ -70,48 +70,3 @@ exports.listBroadcastsByViews = (req,res)=>{
     
 }
 
-exports.startStreaming = (req,res)=>{
-    var io = req.app.get("socketio");
-    io.of("/stream")
-    io.on("connection",(socket)=>{
-        const {username,streamingID} = socket.handshake.query;
-        console.log("streamingID",streamingID)
-        console.log("Socket ID" + socket.id)
-        socket.emit('connect_error',streamingID)
-    })
- 
-
-    // io.on("connection",(socket)=>{
-    //     const {username,streamingID} = socket.handshake.query;
-
-    //     if( username !== undefined && streamingID !== undefined && username.length > 0 && validate(streamingID)){
-    //         if(Broadcasters[username.toLowerCase()] !== undefined ){
-    //             if( Broadcasters[username.toLowerCase()].getBroadcastID() === streamingID){
-    //                 console.log(`${username} has just been connected! socketID: ${socket.id}`)
-    //             socket.on(streamingID,(data)=>{
-    //                 console.log("Data",data)
-    //                 saveVideoChunck(username,data);
-    //             })
-        
-    //                 res.status(200)
-    //                 res.send("success: we are ready to stream, socketID");
-    //             }else{
-    //                 res.status(402)
-    //                 res.send("error: incorrect streaming ID for user");
-    //             }
-               
-    //         }else{
-    //             res.status(405)
-    //             res.send(`error: ${username} is an unknown user`)
-    //         }
-    //     }else{
-    //         res.status(400)
-    //         res.send("Bad request")
-    //     }
-       
-    // })
-
-    // res.staxtus(200);
-    res.send("<h1>Succeeded</h1>")
-    
-}

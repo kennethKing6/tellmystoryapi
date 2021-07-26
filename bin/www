@@ -7,7 +7,7 @@
 var app = require('../app');
 var debug = require('debug')('nodejsrouter:server');
 var http = require('http');
-const  {Server} = require("socket.io")
+const {initSocketIOServers} = require('../socket');
 
 
 /**
@@ -23,14 +23,8 @@ app.set('port', port);
 
 var server = http.createServer(app);
 
-const io = new Server(server);
-app.set("socketio",io)
-io.on('connection', (socket) => {
-  console.log('a user connected',socket.id);
-});
-io.on("connect_error", (err) => {
-  console.log(`connect_error due to ${err.message}`);
-});
+
+initSocketIOServers(server)
 
 /**
  * Listen on provided port, on all network interfaces.
@@ -102,4 +96,3 @@ function onListening() {
 }
 
 
-module.exports.server = server;
