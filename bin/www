@@ -8,7 +8,7 @@ var app = require('../app');
 var debug = require('debug')('nodejsrouter:server');
 var http = require('http');
 const {initSocketIOServers} = require('../socket');
-const { streamingServer } = require('../media_server');
+const { ExpressPeerServer } = require('peer');
 
 
 /**
@@ -36,6 +36,25 @@ server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
 
+/**
+ * Create the live streaming server 
+ * */
+const customGenerationFunction = () => (Math.random().toString(36) + '0000000000000000000').substr(2, 16);
+
+const peerServer = ExpressPeerServer(server, {
+    path: '/',
+    generateClientId:customGenerationFunction()
+  });
+  
+app.use("stream",peerServer)
+
+peerServer.on('connection', (client) => {
+    console.log("client",client)
+ });
+
+ peerServer.on('disconnect', (client) => { 
+     console.log("Disconnection",client)
+ });
 
 /**
  * Normalize a port into a number, string, or false.
@@ -98,4 +117,3 @@ function onListening() {
 }
 
 
-exports.server = server;
