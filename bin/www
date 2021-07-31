@@ -8,6 +8,7 @@ var app = require('../app');
 var debug = require('debug')('nodejsrouter:server');
 var http = require('http');
 const {initSocketIOServers} = require('../socket');
+const { streamingServer } = require('../media_server');
 
 
 /**
@@ -25,6 +26,7 @@ var server = http.createServer(app);
 
 
 initSocketIOServers(server)
+// streamingServer()
 
 /**
  * Listen on provided port, on all network interfaces.
@@ -96,3 +98,4 @@ function onListening() {
 }
 
 
+exports.server = server;

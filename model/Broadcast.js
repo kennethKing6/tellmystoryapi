@@ -18,10 +18,13 @@ class Broadcast{
         this.userbroadcastID = broadcastUserID;
         this.views = 0;
         this.broadcasterusername = broadcasterUsername;
-        this.videopath = `./files/${this.broadcastID}/video.mp4`;
-        this.imgpath = `./files/${this.broadcastID}/image.png`;
-        createVideoFile(this.videopath);
-        createVideoImage(this.imgpath)
+       
+     this.initFiles()
+    }
+    initFiles(){
+        this.videopath =  createVideoFile(`./files/${this.broadcastID}/video.mp4`);
+       
+        this.imgpath =  createVideoImage(`./files/${this.broadcastID}/image.png`)
     }
 
      getViews(){
@@ -47,18 +50,22 @@ class Broadcast{
         return this.broadcasterusername;
     }
 
+    
+
+   
 }
 
-function createVideoFile(videopath){
-    fs.mkdir(path.dirname(videopath), { recursive: true }, (err) => {
+ function createVideoFile(videopath){
+    fs.mkdirSync(path.dirname(videopath), { recursive: true }, (err) => {
         if (err) throw err;
 
-        fs.open(videopath,"w",function (err, file) {
+        fs.openSync(videopath,"w",function (err, file) {
             if (err) throw err;
-            console.log('Saved!');
+           
           })
+         
       })
-   
+      return __dirname + "/." + videopath; 
 }
 
 function createVideoImage(imgpath){
@@ -67,8 +74,11 @@ function createVideoImage(imgpath){
 
         fs.open(imgpath,"w",function (err, file) {
             if (err) throw err;
-            console.log('Saved!');
           })
       })
+
+      return  __dirname + "/." + imgpath;
+
 }
+
 module.exports.Broadcast = Broadcast;
